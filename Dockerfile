@@ -31,21 +31,17 @@ RUN apt-get update -qqy \
     less nano tree \
     python python-pip groff \
     rlwrap \
+    bison \
+    libffi-dev \
+    libgdbm-dev \
+    libgdbm3 \
+    libncurses5-dev \
+    libreadline6-dev \
+    libssl-dev \
+    libyaml-dev \
+    zlib1g-dev \
   && rm -rf /var/lib/apt/lists/* \
   && sed -i 's/securerandom\.source=file:\/dev\/random/securerandom\.source=file:\/dev\/urandom/' ./usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security
-
-
-RUN apt-get install -y autoconf \
-                   bison \
-                   libffi-dev \
-                   libgdbm-dev \
-                   libgdbm3 \
-                   libncurses5-dev \
-                   libreadline6-dev \
-                   libssl-dev \
-                   libyaml-dev \
-                   zlib1g-dev
-                   
 
 # workaround https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=775775
 RUN [ -f "/etc/ssl/certs/java/cacerts" ] || /var/lib/dpkg/info/ca-certificates-java.postinst configure
