@@ -35,11 +35,8 @@ RUN apt-get update -qqy \
   && sed -i 's/securerandom\.source=file:\/dev\/random/securerandom\.source=file:\/dev\/urandom/' ./usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security
 
 
-apt-get install -y autoconf \
+RUN apt-get install -y autoconf \
                    bison \
-                   build-essential \
-                   curl \
-                   git \
                    libffi-dev \
                    libgdbm-dev \
                    libgdbm3 \
