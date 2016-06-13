@@ -34,6 +34,22 @@ RUN apt-get update -qqy \
   && rm -rf /var/lib/apt/lists/* \
   && sed -i 's/securerandom\.source=file:\/dev\/random/securerandom\.source=file:\/dev\/urandom/' ./usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security
 
+
+apt-get install -y autoconf \
+                   bison \
+                   build-essential \
+                   curl \
+                   git \
+                   libffi-dev \
+                   libgdbm-dev \
+                   libgdbm3 \
+                   libncurses5-dev \
+                   libreadline6-dev \
+                   libssl-dev \
+                   libyaml-dev \
+                   zlib1g-dev
+                   
+
 # workaround https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=775775
 RUN [ -f "/etc/ssl/certs/java/cacerts" ] || /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
@@ -89,9 +105,6 @@ RUN npm install --global grunt-cli@0.1.2 bower@1.7.9 gulp@3.9.1
 ARG RUBY_VERSION
 ENV RUBY_VERSION=${RUBY_VERSION:-2.3.0}
 
-COPY scripts/package-setup.sh /
-RUN /package-setup.sh $RUBY_VERSION
-RUN rm -fv /package-setup.sh
 
 COPY scripts/rbenv-setup.sh /
 RUN bash /rbenv-setup.sh $RUBY_VERSION
