@@ -97,12 +97,13 @@ COPY scripts/rbenv-setup.sh /
 RUN bash /rbenv-setup.sh $RUBY_VERSION
 RUN rm -fv /rbenv-setup.sh
 
-COPY scripts/init.sh /init.sh
-RUN chmod +x /init.sh
-ENTRYPOINT ["/init.sh"]
-
 USER builder
 
 # for dev purpose
 # USER root
+
+COPY scripts/init.sh /init.sh
+RUN chmod +x /init.sh
+ENTRYPOINT ["/init.sh"]
+
 
