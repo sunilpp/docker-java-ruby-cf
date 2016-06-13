@@ -102,8 +102,4 @@ USER builder
 # for dev purpose
 # USER root
 
-COPY scripts/init.sh /init.sh
-RUN chmod +x /init.sh
-ENTRYPOINT ["/init.sh"]
-
 
