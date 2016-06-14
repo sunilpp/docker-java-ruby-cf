@@ -68,6 +68,9 @@ RUN apt-get update -qqy \
     rbenv \
     ruby-build 
     
+RUN rbenv install 2.3.0
+RUN rbenv global 2.3.0
+
 RUN gem install bundler
 
 RUN rbenv rehash
