@@ -100,9 +100,9 @@ RUN git clone --depth 1 https://github.com/sstephenson/rbenv.git /home/builder/.
 RUN git clone --depth 1 https://github.com/sstephenson/ruby-build.git /home/builder/.rbenv/plugins/ruby-build 
 RUN rm -rfv /home/builder/.rbenv/plugins/ruby-build/.git 
 RUN rm -rfv /home/builder/.rbenv/.git 
-RUN export PATH="/home/builder/.rbenv/bin:$PATH" 
-RUN export RUBY_CFLAGS='-O2' 
-RUN export CONFIGURE_OPTS="--disable-install-doc" 
+ENV PATH /home/builder/.rbenv/bin:$PATH
+ENV RUBY_CFLAGS -O2 
+ENV CONFIGURE_OPTS --disable-install-doc
 RUN eval "$(rbenv init -)" 
 RUN rbenv install -$RUBY_VERSION 
 RUN rbenv global -$RUBY_VERSION 
