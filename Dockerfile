@@ -65,7 +65,8 @@ ENV CONFIGURE_OPTS --disable-install-doc
 
 RUN apt-get update -qqy \
   && apt-get -qqy --no-install-recommends install \
-    rbenv ruby-build \
+    rbenv \
+    ruby-build 
     
 RUN gem install bundler
 
