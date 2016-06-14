@@ -69,7 +69,7 @@ RUN rm -fv /rbenv-setup.sh
 
 COPY scripts/init.sh /init.sh
 RUN chmod +x /init.sh
-ENTRYPOINT ["/init.sh"]
+#ENTRYPOINT ["/init.sh"]
 
 
 #==========
