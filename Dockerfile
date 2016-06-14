@@ -103,11 +103,12 @@ RUN rm -rfv /home/builder/.rbenv/.git
 ENV PATH /home/builder/.rbenv/bin:$PATH
 ENV RUBY_CFLAGS -O2 
 ENV CONFIGURE_OPTS --disable-install-doc
-RUN eval "$(rbenv init -)" 
-RUN rbenv install -$RUBY_VERSION 
-RUN rbenv global -$RUBY_VERSION 
-RUN gem install bundler 
-RUN rbenv rehash
+RUN eval "$(rbenv init -)" && \
+   rbenv install -$RUBY_VERSION && \
+   rbenv global -$RUBY_VERSION && \ 
+   gem install bundler && \
+   rbenv rehash
+
 
 
 USER builder
