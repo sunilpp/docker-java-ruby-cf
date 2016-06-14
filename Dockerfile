@@ -100,17 +100,17 @@ ENV RUBY_VERSION -2.3.0
 
 
 RUN   git clone --depth 1 https://github.com/sstephenson/rbenv.git /home/builder/.rbenv && \
-RUN   git clone --depth 1 https://github.com/sstephenson/ruby-build.git /home/builder/.rbenv/plugins/ruby-build && \
-RUN   rm -rfv /home/builder/.rbenv/plugins/ruby-build/.git && \
-RUN   rm -rfv /home/builder/.rbenv/.git && \
-RUN   export PATH="/home/builder/.rbenv/bin:$PATH" && \
-RUN   export RUBY_CFLAGS='-O2' && \
-RUN   export CONFIGURE_OPTS="--disable-install-doc" && \
-RUN   eval "$(rbenv init -)" && \
-RUN   rbenv install $RUBY_VERSION && \
-RUN   rbenv global $RUBY_VERSION && \
-RUN   gem install bundler && \
-RUN   rbenv rehash
+     	git clone --depth 1 https://github.com/sstephenson/ruby-build.git /home/builder/.rbenv/plugins/ruby-build && \
+     	rm -rfv /home/builder/.rbenv/plugins/ruby-build/.git && \
+     	rm -rfv /home/builder/.rbenv/.git && \
+     	export PATH="/home/builder/.rbenv/bin:$PATH" && \
+     	export RUBY_CFLAGS='-O2' && \
+     	export CONFIGURE_OPTS="--disable-install-doc" && \
+     	eval "$(rbenv init -)" && \
+     	rbenv install $RUBY_VERSION && \
+     	rbenv global $RUBY_VERSION && \
+     	gem install bundler && \
+     	rbenv rehash
 
 
 
