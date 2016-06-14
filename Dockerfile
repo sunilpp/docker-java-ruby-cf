@@ -46,6 +46,24 @@ RUN apt-get update -qqy \
 # workaround https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=775775
 RUN [ -f "/etc/ssl/certs/java/cacerts" ] || /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
+
+ENV RUBY_VERSION 2.3.0
+RUN git clone --depth 1 https://github.com/sstephenson/rbenv.git /home/builder/.rbenv 
+RUN git clone --depth 1 https://github.com/sstephenson/ruby-build.git /home/builder/.rbenv/plugins/ruby-build 
+RUN rm -rfv /home/builder/.rbenv/plugins/ruby-build/.git 
+RUN rm -rfv /home/builder/.rbenv/.git 
+ENV PATH /home/builder/.rbenv/bin:$PATH
+ENV RUBY_CFLAGS -O2 
+ENV CONFIGURE_OPTS --disable-install-doc
+
+RUN apt-get update -qqy \
+  && apt-get -qqy --no-install-recommends install \
+    rbenv ruby-build \
+    
+RUN gem install bundler
+
+RUN rbenv rehash
+
 #==========
 # Maven
 #==========
@@ -95,19 +113,7 @@ RUN npm install --global grunt-cli@0.1.2 bower@1.7.9 gulp@3.9.1
 #====================================
 
 # use rbenv understandable version
-ENV RUBY_VERSION 2.3.0
-RUN git clone --depth 1 https://github.com/sstephenson/rbenv.git /home/builder/.rbenv 
-RUN git clone --depth 1 https://github.com/sstephenson/ruby-build.git /home/builder/.rbenv/plugins/ruby-build 
-RUN rm -rfv /home/builder/.rbenv/plugins/ruby-build/.git 
-RUN rm -rfv /home/builder/.rbenv/.git 
-ENV PATH /home/builder/.rbenv/bin:$PATH
-ENV RUBY_CFLAGS -O2 
-ENV CONFIGURE_OPTS --disable-install-doc
-RUN apt-get update -qqy \
-  && apt-get -qqy --no-install-recommends install \
-    rbenv ruby-build \
-RUN gem install bundler
-RUN rbenv rehash
+
 
 
 
