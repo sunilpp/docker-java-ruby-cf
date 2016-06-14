@@ -45,6 +45,13 @@ RUN apt-get update -qqy \
 
 # workaround https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=775775
 RUN [ -f "/etc/ssl/certs/java/cacerts" ] || /var/lib/dpkg/info/ca-certificates-java.postinst configure
+#========================================
+# Add normal user with passwordless sudo
+#========================================
+RUN useradd builder --shell /bin/bash --create-home \
+  && usermod -a -G sudo builder \
+  && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
+  && echo 'builder:secret' | chpasswd
 
 
 ENV RUBY_VERSION 2.3.0
@@ -75,13 +82,6 @@ RUN curl -fsSL http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binar
 
 ENV MAVEN_HOME /usr/share/maven
 
-#========================================
-# Add normal user with passwordless sudo
-#========================================
-RUN useradd builder --shell /bin/bash --create-home \
-  && usermod -a -G sudo builder \
-  && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
-  && echo 'builder:secret' | chpasswd
 
 
 #====================================
