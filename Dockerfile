@@ -70,7 +70,7 @@ RUN apt-get update -qqy \
     
 RUN rbenv install 2.3.0
 RUN rbenv global 2.3.0
-
+RUN eval "$(rbenv init -)"
 RUN gem install bundler
 
 RUN rbenv rehash
