@@ -63,10 +63,10 @@ ENV PATH /home/builder/.rbenv/bin:$PATH
 ENV RUBY_CFLAGS -O2 
 ENV CONFIGURE_OPTS --disable-install-doc
 
-RUN apt-get update -qqy \
-  && apt-get -qqy --no-install-recommends install \
-    rbenv \
-    ruby-build 
+#RUN apt-get update -qqy \
+# && apt-get -qqy --no-install-recommends install \
+#   rbenv \
+#   ruby-build 
 RUN eval "$(rbenv init -)"    
 RUN rbenv install 2.3.0
 RUN rbenv global 2.3.0
