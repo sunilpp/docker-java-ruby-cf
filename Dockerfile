@@ -96,7 +96,7 @@ RUN npm install --global grunt-cli@0.1.2 bower@1.7.9 gulp@3.9.1
 
 
 ARG RUBY_VERSION
-ENV RUBY_VERSION=${RUBY_VERSION:2.3.0}
+ENV RUBY_VERSION=${RUBY_VERSION:-v 2.3.0}
 
 
 COPY scripts/rbenv-setup.sh /
