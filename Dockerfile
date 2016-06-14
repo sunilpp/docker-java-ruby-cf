@@ -94,27 +94,13 @@ RUN npm install --global grunt-cli@0.1.2 bower@1.7.9 gulp@3.9.1
 # install Rbenv,Ruby 
 #====================================
 
+# use rbenv understandable version
+ENV RUBY_VERSION=${RUBY_VERSION:-2.3.0}
 
 
-ENV RUBY_VERSION -2.3.0
-
-
-RUN   git clone --depth 1 https://github.com/sstephenson/rbenv.git /home/builder/.rbenv && \
-     	git clone --depth 1 https://github.com/sstephenson/ruby-build.git /home/builder/.rbenv/plugins/ruby-build && \
-     	rm -rfv /home/builder/.rbenv/plugins/ruby-build/.git && \
-     	rm -rfv /home/builder/.rbenv/.git && \
-     	export PATH="/home/builder/.rbenv/bin:$PATH" && \
-     	export RUBY_CFLAGS='-O2' && \
-     	export CONFIGURE_OPTS="--disable-install-doc" && \
-     	eval "$(rbenv init -)" && \
-     	rbenv install $RUBY_VERSION && \
-     	rbenv global $RUBY_VERSION && \
-     	gem install bundler && \
-     	rbenv rehash
-
-
-
-
+COPY scripts/rbenv-setup.sh /
+RUN /rbenv-setup.sh $RUBY_VERSION
+RUN rm -fv /rbenv-setup.sh
 
 USER builder
 
