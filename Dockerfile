@@ -55,23 +55,22 @@ RUN useradd builder --shell /bin/bash --create-home \
   && echo 'builder:secret' | chpasswd
 
 
-ENV RUBY_VERSION 2.3.0
-RUN git clone --depth 1 https://github.com/sstephenson/rbenv.git /home/builder/.rbenv 
-RUN git clone --depth 1 https://github.com/sstephenson/ruby-build.git /home/builder/.rbenv/plugins/ruby-build 
-RUN rm -rfv /home/builder/.rbenv/plugins/ruby-build/.git 
-RUN rm -rfv /home/builder/.rbenv/.git 
-ENV PATH /home/builder/.rbenv/bin:$PATH
-ENV RUBY_CFLAGS -O2 
-ENV CONFIGURE_OPTS --disable-install-doc
-RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh # or /etc/profile
-RUN echo 'eval "$(rbenv init -)"' >> /home/builder/.bashrc
-RUN eval "$(rbenv init -)"    
-RUN rbenv install 2.3.0
-RUN rbenv global 2.3.0
+# use rbenv understandable version
+ARG RUBY_VERSION
+ENV RUBY_VERSION=${RUBY_VERSION:-2.3.0}
 
-RUN gem install bundler
+COPY scripts/package-setup.sh /
+RUN /package-setup.sh $RUBY_VERSION
+RUN rm -fv /package-setup.sh
 
-RUN rbenv rehash
+COPY scripts/rbenv-setup.sh /
+RUN bash /rbenv-setup.sh $RUBY_VERSION
+RUN rm -fv /rbenv-setup.sh
+
+COPY scripts/init.sh /init.sh
+RUN chmod +x /init.sh
+ENTRYPOINT ["/init.sh"]
+
 
 #==========
 # Maven
@@ -93,9 +92,9 @@ ENV MAVEN_HOME /usr/share/maven
 RUN wget -O - "http://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -C /usr/local/bin -zxf -
 
 # compatibility with CloudBees AWS CLI Plugin which expects pip to be installed as user
-RUN mkdir -p /home/builder/.local/bin/ \
-  && ln -s /usr/bin/pip /home/builder/.local/bin/pip \
-  && chown -R builder:builder /home/builder/.local
+RUN mkdir -p /root/.local/bin/ \
+  && ln -s /usr/bin/pip /root/.local/bin/pip \
+  && chown -R builder:builder /root/.local
 
 #====================================
 # NODE JS
