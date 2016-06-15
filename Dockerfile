@@ -46,6 +46,8 @@ RUN apt-get update -qqy \
 
 # workaround https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=775775
 RUN [ -f "/etc/ssl/certs/java/cacerts" ] || /var/lib/dpkg/info/ca-certificates-java.postinst configure
+
+RUN apt-get -y install sudo
 #========================================
 # Add normal user with passwordless sudo
 #========================================
