@@ -46,8 +46,6 @@ RUN apt-get update -qqy \
 
 # workaround https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=775775
 RUN [ -f "/etc/ssl/certs/java/cacerts" ] || /var/lib/dpkg/info/ca-certificates-java.postinst configure
-
-RUN apt-get -y install sudo
 #========================================
 # Add normal user with passwordless sudo
 #========================================
@@ -71,7 +69,7 @@ RUN rm -fv /rbenv-setup.sh
 
 COPY scripts/init.sh /init.sh
 RUN chmod +x /init.sh
-#ENTRYPOINT ["/init.sh"]
+ENTRYPOINT ["/init.sh"]
 
 
 #==========
@@ -94,9 +92,9 @@ ENV MAVEN_HOME /usr/share/maven
 RUN wget -O - "http://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -C /usr/local/bin -zxf -
 
 # compatibility with CloudBees AWS CLI Plugin which expects pip to be installed as user
-RUN mkdir -p /root/.local/bin/ \
-  && ln -s /usr/bin/pip /root/.local/bin/pip \
-  && chown -R builder:builder /root/.local
+RUN mkdir -p /home/builder/.local/bin/ \
+  && ln -s /usr/bin/pip /home/builder/.local/bin/pip \
+  && chown -R builder:builder /home/builder/.local
 
 #====================================
 # NODE JS
@@ -122,7 +120,5 @@ RUN npm install --global grunt-cli@0.1.2 bower@1.7.9 gulp@3.9.1
 
 USER builder
 
-# for dev purpose
-# USER root
 
 
