@@ -67,9 +67,7 @@ COPY scripts/rbenv-setup.sh /
 RUN bash /rbenv-setup.sh $RUBY_VERSION
 RUN rm -fv /rbenv-setup.sh
 
-COPY scripts/init.sh /init.sh
-RUN chmod +x /init.sh
-ENTRYPOINT ["/init.sh"]
+
 
 
 #==========
@@ -119,6 +117,8 @@ RUN npm install --global grunt-cli@0.1.2 bower@1.7.9 gulp@3.9.1
 
 
 USER builder
-
+COPY scripts/init.sh /init.sh
+RUN chmod +x /init.sh
+ENTRYPOINT ["/init.sh"]
 
 
