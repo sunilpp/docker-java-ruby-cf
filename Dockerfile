@@ -55,19 +55,28 @@ RUN useradd builder --shell /bin/bash --create-home \
   && echo 'builder:secret' | chpasswd
 
 
-# use rbenv understandable version
-ARG RUBY_VERSION
-ENV RUBY_VERSION=${RUBY_VERSION:-2.3.0}
+RUN git clone https://github.com/sstephenson/rbenv.git /home/builder/rbenv
+RUN git clone https://github.com/sstephenson/ruby-build.git /home/builder/rbenv/plugins/ruby-build
+RUN git clone https://github.com/jf/rbenv-gemset.git /home/builder/rbenv/plugins/rbenv-gemset
+RUN /home/builder/rbenv/plugins/ruby-build/install.sh
+ENV PATH /home/builder/rbenv/bin:$PATH
+ENV RBENV_ROOT /home/builder/rbenv
 
-COPY scripts/package-setup.sh /
-RUN /package-setup.sh $RUBY_VERSION
-RUN rm -fv /package-setup.sh
+RUN echo 'export RBENV_ROOT=/home/builder/rbenv' >> /etc/profile.d/rbenv.sh
+RUN echo 'export PATH=/home/builder/rbenv/bin:$PATH' >> /etc/profile.d/rbenv.sh
+RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
 
-COPY scripts/rbenv-setup.sh /
-RUN bash /rbenv-setup.sh $RUBY_VERSION
-RUN rm -fv /rbenv-setup.sh
+RUN echo 'export RBENV_ROOT=/home/builder/rbenv' >> .bashrc
+RUN echo 'export PATH=/home/builder/rbenv/bin:/home/builder/rbenv/shims:$PATH' >> .bashrc
+RUN echo 'eval "$(rbenv init -)"' >> .bashrc
+RUN export PATH=/home/builder/rbenv/bin:/home/builder/rbenv/shims/:$PATH
+RUN rbenv install 2.2.3 \
+ && rbenv global 2.2.3 
+RUN export PATH=/home/builder/rbenv/versions/2.2.3/bin:$PATH \
+&& gem install bundler \
+ && rbenv rehash
 
-
+ENV CONFIGURE_OPTS --disable-install-doc
 
 
 #==========
@@ -83,16 +92,7 @@ ENV MAVEN_HOME /usr/share/maven
 
 
 
-#====================================
-# Cloud Foundry CLI
-# https://github.com/cloudfoundry/cli
-#====================================
-RUN wget -O - "http://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -C /usr/local/bin -zxf -
 
-# compatibility with CloudBees AWS CLI Plugin which expects pip to be installed as user
-RUN mkdir -p /home/builder/.local/bin/ \
-  && ln -s /usr/bin/pip /home/builder/.local/bin/pip \
-  && chown -R builder:builder /home/builder/.local
 
 #====================================
 # NODE JS
@@ -113,12 +113,6 @@ RUN npm install --global grunt-cli@0.1.2 bower@1.7.9 gulp@3.9.1
 
 # use rbenv understandable version
 
-
-
-
 USER builder
-COPY scripts/init.sh /init.sh
-RUN chmod +x /init.sh
-ENTRYPOINT ["/init.sh"]
 
 
